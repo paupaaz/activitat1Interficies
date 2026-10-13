@@ -13,7 +13,7 @@ const emitirEvento = defineEmits(['update:dialogAbierto'])
     @update:model-value="emitirEvento('update:dialogAbierto', $event)"
     max-width="600"
   >
-    <v-card v-if="peliculaSeleccionada">
+    <v-card color = "#FFE8D6" v-if="peliculaSeleccionada">
 
       <v-card-title>
         {{ peliculaSeleccionada.Title }}
@@ -35,7 +35,7 @@ const emitirEvento = defineEmits(['update:dialogAbierto'])
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn @click="emitirEvento('update:dialogAbierto', false)">
+        <v-btn color="#9C2B1B" @click="emitirEvento('update:dialogAbierto', false)">
           Tancar
         </v-btn>
       </v-card-actions>

@@ -1,4 +1,4 @@
-
+```vue
 <script setup>
 import { ref } from 'vue'
 import { cercar, obtenir } from '../services/communicationManager.js'
@@ -21,13 +21,21 @@ async function mostrarInfo(id) {
 </script>
 
 <template>
-  <v-layout class="rounded rounded-md border">
+  <v-layout style="background-color: #FFE8D6; min-height: 100vh;">
 
-    <v-app-bar title="Cercador de pel·lícules"></v-app-bar>
+    <v-app-bar
+      title="Cercador de pel·lícules"
+      color="#FF8360"
+      class="font-weight-bold"
+    ></v-app-bar>
 
-    <v-navigation-drawer>
+    <v-navigation-drawer color="#FFB79A">
       <v-list nav>
-        <v-list-item title="Navigation drawer" link></v-list-item>
+        <v-list-item
+          title="Cercar pel·lícules"
+          prepend-icon="mdi-magnify"
+          link
+        ></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -35,70 +43,108 @@ async function mostrarInfo(id) {
       <v-container>
 
         <v-sheet
-          color="surface-light"
+          color="#FFF8F2"
           rounded="lg"
           width="100%"
-          class="pa-4"
+          class="pa-5"
+          elevation="1"
         >
+          <h2 class="text-h5 mb-4" style="color: #9C2B1B;">
+            Busca una pel·lícula
+          </h2>
+
           <v-text-field
             v-model="nom"
-            label="Escriu un nom"
+            label="Escriu el nom de la pel·lícula"
+            placeholder="Ex.: Titanic"
+            prepend-inner-icon="mdi-magnify"
+            color="#9C2B1B"
+            variant="outlined"
             clearable
+            @keyup.enter="buscar"
           ></v-text-field>
 
           <div class="d-flex justify-end">
-            <v-btn @click="buscar">
-              Cercar pel·lícula
+            <v-btn
+              @click="buscar"
+              color="#9C2B1B"
+              prepend-icon="mdi-magnify"
+            >
+              Cercar
             </v-btn>
           </div>
         </v-sheet>
 
-        <v-row v-if="noms.length" class="mt-4">
+        <div v-if="noms.length > 0" class="mt-6">
+          <h2 class="text-h5 mb-4" style="color: #9C2B1B;">
+            Resultats de la cerca
+          </h2>
 
-          <v-col
-            v-for="pelicula in noms"
-            :key="pelicula.imdbID"
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <v-card>
-
-              <v-img
-                :src="pelicula.Poster"
-                height="300"
-                cover
-              ></v-img>
-
-              <v-card-title>
-                {{ pelicula.Title }}
-              </v-card-title>
-
-              <v-card-text>
-                Any: {{ pelicula.Year }}
-              </v-card-text>
-
-              <v-card-text>
-                Tipus: {{ pelicula.Type }}
-              </v-card-text>
-
-              <v-card-actions>
-                <v-btn
-                  color="primary"
-                  @click="mostrarInfo(pelicula.imdbID)"
+          <v-row>
+            <v-col
+              v-for="pelicula in noms"
+              :key="pelicula.imdbID"
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-card
+                color="#FFF8F2"
+                rounded="lg"
+                elevation="2"
+                class="h-100"
+              >
+                <v-img
+                  :src="pelicula.Poster !== 'N/A' ? pelicula.Poster : undefined"
+                  height="320"
+                  cover
+                  color="#FFB79A"
                 >
-                  Més informació
-                </v-btn>
-              </v-card-actions>
+                  <template #error>
+                    <div class="d-flex align-center justify-center h-100">
+                      No hi ha pòster disponible
+                    </div>
+                  </template>
+                </v-img>
 
-            </v-card>
-          </v-col>
+                <v-card-title class="font-weight-bold">
+                  {{ pelicula.Title }}
+                </v-card-title>
 
-        </v-row>
+                <v-card-text>
+                  <p>Any: {{ pelicula.Year }}</p>
+                  <p class="mt-2">Tipus: {{ pelicula.Type }}</p>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-btn
+                    color="#9C2B1B"
+                    variant="flat"
+                    @click="mostrarInfo(pelicula.imdbID)"
+                  >
+                    Més informació
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+
+        <v-sheet
+          v-else
+          color="#FFF8F2"
+          rounded="lg"
+          class="pa-5 mt-6 text-center"
+        >
+          <p style="color: #9C2B1B;">
+            Escriu el nom d'una pel·lícula per veure els resultats.
+          </p>
+        </v-sheet>
 
         <InfoPelicula
-        v-model:dialogAbierto="dialog"
-        :peliculaSeleccionada="peliculaSeleccionada"/>
+          v-model:dialogAbierto="dialog"
+          :peliculaSeleccionada="peliculaSeleccionada"
+        />
 
       </v-container>
     </v-main>
